@@ -106,6 +106,7 @@ class PrincipalAdministrador extends CI_Controller {
 
 		$this->load->view('administrador/head');
 		$this->load->view('administrador/header');
+		$this->load->view('administrador/aside');
 		$this->load->view('administrador/notas/formulario',$resultado);
 	}
 	public function notas(){
@@ -129,6 +130,7 @@ class PrincipalAdministrador extends CI_Controller {
 
 		$this->load->view('administrador/head');
 		$this->load->view('administrador/header');
+		$this->load->view('administrador/aside');
 		$this->load->view('administrador/notas/body',$resultado);
 	
 
@@ -144,5 +146,7 @@ class PrincipalAdministrador extends CI_Controller {
 				$this->Administrador_Model->actualizar_notas($arreglo);
 			}
 		}
+		header( "Refresh:0; url=".base_url());
+
 	}
 }
