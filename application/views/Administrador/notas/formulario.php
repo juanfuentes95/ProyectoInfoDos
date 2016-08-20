@@ -1,6 +1,7 @@
 <body>
 
 <div class="container col-md-10">
+	<!-- El resultado del formulario(filtro) se envía de vuelta al controlador "notas"-->
 	<form method="POST" action="<?php echo base_url();?>index.php/principaladministrador/notas">
 	  	<div class="form-group">
 	    	<label for="curso">Curso</label>

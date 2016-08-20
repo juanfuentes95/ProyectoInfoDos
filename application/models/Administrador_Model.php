@@ -6,18 +6,21 @@ class Administrador_Model extends CI_Model{
 	}
 	
 
+	//Consulta todos los cursos de la base de datos
 	public function Consultar_Curso(){
 		$consulta="SELECT id_curso,nombre_curso FROM curso";
 		$respuesta=$this->db->query($consulta);
 		return $respuesta;
 	}
 
+	//Consulta todas las ediciones de la base de datos
 	public function Consultar_Edicion(){
 		$consulta="SELECT anio_curso FROM edicion";
 		$respuesta=$this->db->query($consulta);
 		return $respuesta;
 	}
 
+	//Consulta todas las asignaturas de la base de datos
 	public function Consultar_Asignatura(){
 		$consulta="SELECT id_asignatura,nombre_asignatura FROM asignatura";
 		$respuesta=$this->db->query($consulta);
@@ -25,7 +28,7 @@ class Administrador_Model extends CI_Model{
 	}
 
 	
-
+	//nos devuelve el ID de la edición, a partir del Curso y Año Edición, que en el filtro venían por separado
 	public function Consultar_Edicion_post($arreglo){
 		$consulta="	SELECT id_edicion FROM edicion 
 					WHERE id_curso=".$arreglo['curso']." 
@@ -34,6 +37,8 @@ class Administrador_Model extends CI_Model{
 		return $respuesta;
 	}
 
+	//nos devuelve las tuplas de alumnos que tienen tal asignatura, de tal edición
+	//y de tal semestre. Serán varios alumnos, todos compañeros
 	public function Consultar_Registro($arreglo){
 		$consulta="	SELECT id_registro, rut_alumno FROM registro 
 					WHERE
