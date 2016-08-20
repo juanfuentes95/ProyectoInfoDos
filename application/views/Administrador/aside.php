@@ -30,10 +30,12 @@
 	        <div class="panel-body">
 	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/edicion">Ediciones</a>
 	        </div>
-	        
+	        <div class="panel-body">
+	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/registro">Registros</a>
+	        </div>
 
 	        <div class="panel-body">
-	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/notas">Notas</a>
+	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/formulario_notas">Notas</a>
 	        </div>
 	  	</div>
 	</div>
