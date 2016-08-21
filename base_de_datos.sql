@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-08-2016 a las 02:59:43
+-- Tiempo de generación: 21-08-2016 a las 06:28:42
 -- Versión del servidor: 10.1.13-MariaDB
 -- Versión de PHP: 7.0.8
 
@@ -143,6 +143,28 @@ INSERT INTO `edicion` (`id_edicion`, `nombre_curso`, `anio_curso`, `rut_profesor
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `events`
+--
+
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `color` varchar(7) NOT NULL DEFAULT '#3a87ad',
+  `date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `events`
+--
+
+INSERT INTO `events` (`id`, `title`, `description`, `color`, `date`) VALUES
+(15, 'hola', '123', '#3a87ad', '2016-08-01 23:23:00'),
+(16, 'holamundo', '123', '#3a87ad', '2016-08-02 23:34:00');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `notas`
 --
 
@@ -256,6 +278,12 @@ ALTER TABLE `edicion`
   ADD KEY `fk_edicion_profesor` (`rut_profesor_jefe`);
 
 --
+-- Indices de la tabla `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `notas`
 --
 ALTER TABLE `notas`
@@ -278,6 +306,15 @@ ALTER TABLE `registro`
   ADD KEY `fk_registro_profesor` (`rut_profesor`),
   ADD KEY `fk_registro_asignatura` (`id_asignatura`);
 
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `events`
+--
+ALTER TABLE `events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- Restricciones para tablas volcadas
 --
