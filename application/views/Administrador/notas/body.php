@@ -7,8 +7,8 @@
 		  	<thead>
 			    <tr>
 			      	<th>#</th>
-			      	<th>First Name</th>
-			      	<th>Last Name</th>
+			      	<th>ID Registro</th>
+			      	<th>RUT Alumno</th>
 			      	<th>Notas</th>
 			    </tr>
 		  	</thead>
@@ -22,7 +22,7 @@
 					$id_registro=$atributo->id_registro;
 					$rut_alumno=$atributo->rut_alumno;
 					echo "<tr>";
-					echo "<th scope='row'>".$i."</th>";
+					echo "<th>".$i."</th>";
 					echo "<td>".$id_registro."</td>";
 					echo "<td>".$rut_alumno."</td>";
 					$i=$i+1;
@@ -34,6 +34,7 @@
 						echo "<th><input type='text' class='form-control' name='nota-".$aux."' value='".$value->nota."'></th>";
 					}
 					echo "<input style='display:none;' type='text' name='valor_maximo' value='".$aux."'>";
+
 					echo "</tr>";
 					//por lo tanto, todas las notas serán enviadas con el tag="nota-x", el valor máximo se refiere al "x" máximo que se ocupará para actualizar la base de datos
 				}

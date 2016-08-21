@@ -3,39 +3,39 @@
 	   	<div class="panel panel-default">
 	    	<div class="panel-heading">Panel Administración</div>
 
-	        <div class="panel-body" style="display:none;">
-            	<a id="" class="color-panel" onclick="">Hola Menú</a>
-        	</div>
-        	<ul id="" style="display: none;">
-	         	<div class="panel-body">
-	            	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/#">Hola1</a>
-	          	</div>
-		        <div class="panel-body">
-		        	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/#">Hola2</a>
-		        </div>
-		        <div class="panel-body">
-		        	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/#">Hola3</a>
-		        </div>
-		        <div class="panel-body">
-		           	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/#">Hola4</a>
-		        </div>
-		        <div class="panel-body">
-		        	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/#">Hola5</a>
-		        </div>
-		    </ul>
-        
+	                
 	        <div class="panel-body">
-	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/curso">Cursos</a>
+	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/alumno">Alumnos</a>
 	        </div>
 	        <div class="panel-body">
-	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/edicion">Ediciones</a>
+	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/apoderado">Apoderados</a>
 	        </div>
 	        <div class="panel-body">
-	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/registro">Registros</a>
+	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/profesor">Profesores</a>
+	        </div>
+
+	        <div class="panel-body">
+	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/asignatura">Asignaturas</a>
+	        </div>
+
+	        <div class="panel-body">
+	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/asignaciones">Asignaciones</a>
+	        </div>
+
+	        <div class="panel-body">
+	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/registro">Registro</a>
+	        </div>
+
+	        <div class="panel-body">
+	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/edicion">Edicion</a>
 	        </div>
 
 	        <div class="panel-body">
 	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/formulario_notas">Notas</a>
+	        </div>
+
+	        <div class="panel-body">
+	          	<a class="color-panel" href="<?php echo base_url()?>index.php/principalAdministrador/anotaciones">Anotaciones</a>
 	        </div>
 	  	</div>
 	</div>

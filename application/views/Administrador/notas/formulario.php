@@ -3,32 +3,34 @@
 <div class="container col-md-10">
 	<!-- El resultado del formulario(filtro) se envía de vuelta al controlador "notas"-->
 	<form method="POST" action="<?php echo base_url();?>index.php/principaladministrador/notas">
-	  	<div class="form-group">
-	    	<label for="curso">Curso</label>
-			<select class="form-control" name="curso-post">
-				<?php 
-				$id_curso=null;
-				$nombre_curso=null;
-				foreach ($curso->result() as $atributo) {
-					$nombre_curso=$atributo->nombre_curso;
-					$id_curso=$atributo->id_curso;
-					echo "<option value='".$id_curso."'>".$nombre_curso."</option>";
-				}
-				?>
-			</select>
-	  	</div>
+	  	
 	  	<div class="form-group">
 	    	<label for="edicion">Edición</label>
 			<select class="form-control" name="edicion-post">
 				<?php 
-				$anio_curso=null;
-				foreach ($edicion->result() as $atributo) {
-					$anio_curso=$atributo->anio_curso;
+				foreach ($edicion1->result() as $atributo1) {
+					$anio_curso=$atributo1->anio_curso;
 					echo '<option value="'.$anio_curso.'">'.$anio_curso.'</option>';
 				}
 				?>
 			</select>
 	  	</div>
+
+
+	  	<div class="form-group">
+	    	<label for="curso">Curso</label>
+			<select class="form-control" name="curso-post">
+				<?php 
+				foreach ($edicion2->result() as $atributo2) {
+					$nombre_curso=$atributo2->nombre_curso;
+					echo '<option value="'.$nombre_curso.'">'.$nombre_curso.'</option>';
+				}
+				?>
+			</select>
+	  	</div>
+
+
+
 	  	<div class="form-group">
 	    	<label for="asignatura">Asignatura</label>
 			<select class="form-control" name="asignatura-post">

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-08-2016 a las 19:15:54
+-- Tiempo de generación: 21-08-2016 a las 02:59:43
 -- Versión del servidor: 10.1.13-MariaDB
 -- Versión de PHP: 7.0.8
 
@@ -62,8 +62,9 @@ INSERT INTO `alumno` (`rut_alumno`, `contrasena`, `nombre_alumno`, `tipo`, `rut_
 
 CREATE TABLE `anotaciones` (
   `codigo_anotacion` int(11) NOT NULL,
-  `id_registro` int(11) DEFAULT NULL,
-  `anotacion` varchar(250) DEFAULT NULL
+  `anotacion` varchar(250) DEFAULT NULL,
+  `rut_alumno` varchar(250) NOT NULL,
+  `rut_profesor` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -78,6 +79,13 @@ CREATE TABLE `ape` (
   `profesor` int(11) DEFAULT NULL,
   `edicion` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `ape`
+--
+
+INSERT INTO `ape` (`id`, `asignatura`, `profesor`, `edicion`) VALUES
+(0, 1, 111, 1);
 
 -- --------------------------------------------------------
 
@@ -114,31 +122,12 @@ INSERT INTO `asignatura` (`id_asignatura`, `nombre_asignatura`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `curso`
---
-
-CREATE TABLE `curso` (
-  `id_curso` int(11) NOT NULL,
-  `nombre_curso` varchar(250) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `curso`
---
-
-INSERT INTO `curso` (`id_curso`, `nombre_curso`) VALUES
-(1, '2° Básico'),
-(2, '3° Básico');
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `edicion`
 --
 
 CREATE TABLE `edicion` (
   `id_edicion` int(11) NOT NULL,
-  `id_curso` int(11) DEFAULT NULL,
+  `nombre_curso` varchar(250) DEFAULT NULL,
   `anio_curso` int(11) DEFAULT NULL,
   `rut_profesor_jefe` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -147,9 +136,9 @@ CREATE TABLE `edicion` (
 -- Volcado de datos para la tabla `edicion`
 --
 
-INSERT INTO `edicion` (`id_edicion`, `id_curso`, `anio_curso`, `rut_profesor_jefe`) VALUES
-(1, 1, 2015, NULL),
-(2, 1, 2016, NULL);
+INSERT INTO `edicion` (`id_edicion`, `nombre_curso`, `anio_curso`, `rut_profesor_jefe`) VALUES
+(1, '2°', 2015, NULL),
+(2, '3°', 2016, NULL);
 
 -- --------------------------------------------------------
 
@@ -168,8 +157,8 @@ CREATE TABLE `notas` (
 --
 
 INSERT INTO `notas` (`codigo_nota`, `id_registro`, `nota`) VALUES
-(3, 2, 6.3),
-(4, 2, 5.1);
+(3, 2, 2.9),
+(4, 2, 5.2);
 
 -- --------------------------------------------------------
 
@@ -235,8 +224,7 @@ ALTER TABLE `alumno`
 -- Indices de la tabla `anotaciones`
 --
 ALTER TABLE `anotaciones`
-  ADD PRIMARY KEY (`codigo_anotacion`),
-  ADD KEY `fk_anotaciones_registro` (`id_registro`);
+  ADD PRIMARY KEY (`codigo_anotacion`);
 
 --
 -- Indices de la tabla `ape`
@@ -260,17 +248,11 @@ ALTER TABLE `asignatura`
   ADD PRIMARY KEY (`id_asignatura`);
 
 --
--- Indices de la tabla `curso`
---
-ALTER TABLE `curso`
-  ADD PRIMARY KEY (`id_curso`);
-
---
 -- Indices de la tabla `edicion`
 --
 ALTER TABLE `edicion`
   ADD PRIMARY KEY (`id_edicion`),
-  ADD KEY `fk_edicion_curso` (`id_curso`),
+  ADD KEY `fk_edicion_curso` (`nombre_curso`),
   ADD KEY `fk_edicion_profesor` (`rut_profesor_jefe`);
 
 --
@@ -307,12 +289,6 @@ ALTER TABLE `alumno`
   ADD CONSTRAINT `fk_alumno_apoderado` FOREIGN KEY (`rut_apoderado`) REFERENCES `apoderado` (`rut_apoderado`);
 
 --
--- Filtros para la tabla `anotaciones`
---
-ALTER TABLE `anotaciones`
-  ADD CONSTRAINT `fk_anotaciones_registro` FOREIGN KEY (`id_registro`) REFERENCES `registro` (`id_registro`);
-
---
 -- Filtros para la tabla `ape`
 --
 ALTER TABLE `ape`
@@ -324,7 +300,6 @@ ALTER TABLE `ape`
 -- Filtros para la tabla `edicion`
 --
 ALTER TABLE `edicion`
-  ADD CONSTRAINT `fk_edicion_curso` FOREIGN KEY (`id_curso`) REFERENCES `curso` (`id_curso`),
   ADD CONSTRAINT `fk_edicion_profesor` FOREIGN KEY (`rut_profesor_jefe`) REFERENCES `profesor` (`rut_profesor`);
 
 --

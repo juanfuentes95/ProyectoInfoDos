@@ -23,37 +23,13 @@ class PrincipalAdministrador extends CI_Controller {
 	}
 
 	//Se ocupó grocery crud simple, solo para mostrar las tablas, después se verá si es necesario hacerlas a mano o dejarlas así :)
-	public function curso(){
-		$crud = new grocery_CRUD();
-		$crud->set_theme('bootstrap');
-		$crud->set_table('curso');
-		$crud->set_subject('Cursos');
-		$output=$crud->render();
-
-		$this->load->view('administrador/load_gc/head',$output);
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/load_gc/body',$output);
-	}
-
-	public function edicion(){
-		$crud = new grocery_CRUD();
-		$crud->set_theme('bootstrap');
-		$crud->set_table('edicion');
-		$crud->set_subject('Edicion');
-		$output=$crud->render();
-
-		$this->load->view('administrador/load_gc/head',$output);
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/load_gc/body',$output);
-	}
-
 	public function alumno(){
 		$crud = new grocery_CRUD();
 		$crud->set_theme('bootstrap');
 		$crud->set_table('alumno');
 		$crud->set_subject('Alumnos');
+
+		$crud->set_relation('rut_apoderado','apoderado','rut_apoderado');	
 		$output=$crud->render();
 
 		$this->load->view('administrador/load_gc/head',$output);
@@ -61,6 +37,20 @@ class PrincipalAdministrador extends CI_Controller {
 		$this->load->view('administrador/aside');
 		$this->load->view('administrador/load_gc/body',$output);
 	}
+
+	public function apoderado(){
+		$crud = new grocery_CRUD();
+		$crud->set_theme('bootstrap');
+		$crud->set_table('apoderado');
+		$crud->set_subject('Apoderados');
+		$output=$crud->render();
+
+		$this->load->view('administrador/load_gc/head',$output);
+		$this->load->view('administrador/header');
+		$this->load->view('administrador/aside');
+		$this->load->view('administrador/load_gc/body',$output);
+	}
+
 	public function profesor(){
 		$crud = new grocery_CRUD();
 		$crud->set_theme('bootstrap');
@@ -73,12 +63,30 @@ class PrincipalAdministrador extends CI_Controller {
 		$this->load->view('administrador/aside');
 		$this->load->view('administrador/load_gc/body',$output);
 	}
-
 	public function asignatura(){
 		$crud = new grocery_CRUD();
 		$crud->set_theme('bootstrap');
 		$crud->set_table('asignatura');
 		$crud->set_subject('Asignaturas');
+		$output=$crud->render();
+
+		$this->load->view('administrador/load_gc/head',$output);
+		$this->load->view('administrador/header');
+		$this->load->view('administrador/aside');
+		$this->load->view('administrador/load_gc/body',$output);
+	}
+
+
+	public function asignaciones(){
+		$crud = new grocery_CRUD();
+		$crud->set_theme('bootstrap');
+		$crud->set_table('ape');
+		$crud->set_subject('Asignación Profesores a Cursos');
+
+		$crud->set_relation('asignatura','asignatura','nombre_asignatura');
+		$crud->set_relation('profesor','profesor','nombre_profesor');
+		$crud->set_relation('edicion','edicion','{nombre_curso} {anio_curso}');
+		
 		$output=$crud->render();
 
 		$this->load->view('administrador/load_gc/head',$output);
@@ -99,13 +107,27 @@ class PrincipalAdministrador extends CI_Controller {
 		$this->load->view('administrador/aside');
 		$this->load->view('administrador/load_gc/body',$output);
 	}
+
+	public function edicion(){
+		$crud = new grocery_CRUD();
+		$crud->set_theme('bootstrap');
+		$crud->set_table('edicion');
+		$crud->set_subject('Edicion');
+		$crud->set_relation('rut_profesor_jefe','profesor','rut_profesor');
+		$output=$crud->render();
+
+		$this->load->view('administrador/load_gc/head',$output);
+		$this->load->view('administrador/header');
+		$this->load->view('administrador/aside');
+		$this->load->view('administrador/load_gc/body',$output);
+	}
 	//Aquí termina el grocery crud simple, lo siguiente se hizo a mano
 
 	//Este es el primer paso, el formulario permite al usuario filtrar la búsqueda
 	//Se filtra por el curso, edición, asignatura, y semestre/trimestre.
 	public function formulario_notas(){
-		$resultado['curso']=$this->Administrador_Model->Consultar_Curso();
-		$resultado['edicion']=$this->Administrador_Model->Consultar_Edicion();
+		$resultado['edicion1']=$this->Administrador_Model->Consultar_Edicion();
+		$resultado['edicion2']=$this->Administrador_Model->Consultar_Edicion();
 		$resultado['asignatura']=$this->Administrador_Model->Consultar_Asignatura();
 
 		$this->load->view('administrador/head');
@@ -146,8 +168,6 @@ class PrincipalAdministrador extends CI_Controller {
 		$this->load->view('administrador/header');
 		$this->load->view('administrador/aside');
 		$this->load->view('administrador/notas/body',$resultado);
-	
-
 	}
 
 	public function actualizar_basedatos(){
@@ -166,5 +186,25 @@ class PrincipalAdministrador extends CI_Controller {
 		//Luego de actualizar, se redirecciona a la página principal
 		header( "Refresh:0; url=".base_url());
 
+	}
+
+	public function anotaciones(){
+		$crud = new grocery_CRUD();
+		$crud->set_theme('bootstrap');
+		$crud->set_table('anotaciones');
+		$crud->set_subject('Anotaciones');
+
+		$crud->set_relation('rut_alumno','alumno','rut_alumno');
+		$crud->set_relation('rut_profesor','profesor','rut_profesor');
+		$output=$crud->render();
+
+		$this->load->view('administrador/load_gc/head',$output);
+		$this->load->view('administrador/header');
+		$this->load->view('administrador/aside');
+		$this->load->view('administrador/load_gc/body',$output);
+	}
+
+	public function reuniones(){
+		
 	}
 }
