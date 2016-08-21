@@ -12,6 +12,8 @@ class PrincipalAdministrador extends CI_Controller {
 		$this->load->model("Administrador_Model");
 		$this->load->library('Grocery_CRUD');
 		$this->load->model("Grocery_crud_model"); 
+		$this->load->model("Calendar_model"); 
+
 	}
 
 	public function index()
@@ -204,7 +206,45 @@ class PrincipalAdministrador extends CI_Controller {
 		$this->load->view('administrador/load_gc/body',$output);
 	}
 
-	public function reuniones(){
-		
+	Public function calendario()
+	{
+		$this->load->view('administrador/calendario/head');
+		$this->load->view('administrador/header');
+		$this->load->view('administrador/aside');
+		$this->load->view('administrador/calendario/body');
+
 	}
+
+	/*Get all Events */
+
+	Public function getEvents()
+	{
+		$result=$this->Calendar_model->getEvents();
+		echo json_encode($result);
+	}
+	/*Add new event */
+	Public function addEvent()
+	{
+		$result=$this->Calendar_model->addEvent();
+		echo $result;
+	}
+	/*Update Event */
+	Public function updateEvent()
+	{
+		$result=$this->Calendar_model->updateEvent();
+		echo $result;
+	}
+	/*Delete Event*/
+	Public function deleteEvent()
+	{
+		$result=$this->Calendar_model->deleteEvent();
+		echo $result;
+	}
+	Public function dragUpdateEvent()
+	{	
+
+		$result=$this->Calendar_model->dragUpdateEvent();
+		echo $result;
+	}
+
 }
