@@ -1,7 +1,7 @@
 <?php   
     if(isset($_SESSION['rol'])){
-        if ($_SESSION['rol']=="ADMINISTRADOR") {
-            $admin="ADMINISTRADOR";
+        if ($_SESSION['rol']=="APODERADO") {
+            $admin="APODERADO";
         }else{
             $admin="NO ADMIN";
         }        
@@ -11,11 +11,9 @@
     if($admin=="NO SET")
         header("Location: ".base_url());
     if($admin=="NO ADMIN")
-        header("Location: ".base_url()."index.php/principalAdministrador/error");
-    if($admin=="ADMINISTRADOR")
+        header("Location: ".base_url()."index.php/principalAPODERADO/error");
+    if($admin=="APODERADO")
 ?>
-
-
 
 <!DOCTYPE html>
 <html>
@@ -38,7 +36,7 @@
 
         <script src='<?php echo base_url();?>assets/js/bootstrap-colorpicker.min.js'></script>
         <script src='<?php echo base_url();?>assets/js/bootstrap-timepicker.min.js'></script>
-        <script src='<?php echo base_url();?>assets/js/main.js'></script>
+        <script src='<?php echo base_url();?>assets/js/mainApoderado.js'></script>
         <style>
 
             body {

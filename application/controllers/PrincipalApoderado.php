@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class PrincipalAdministrador extends CI_Controller {
+class Principalapoderado extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
@@ -9,7 +9,7 @@ class PrincipalAdministrador extends CI_Controller {
 		$this->load->helper("url_helper");
 		$this->load->helper("url");
 		$this->load->library("session");	
-		$this->load->model("Administrador_Model");
+		$this->load->model("Apoderado_Model");
 		$this->load->library('Grocery_CRUD');
 		$this->load->model("Grocery_crud_model"); 
 		$this->load->model("Calendar_model"); 
@@ -18,25 +18,10 @@ class PrincipalAdministrador extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->view('administrador/head');
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/body');
-	}
-	public function ingresar_notas(){
-		$crud = new grocery_CRUD();
-		$crud->set_theme('bootstrap');
-		$crud->set_table('notas');
-		$crud->set_subject('Ingreso Notas');
-
-		$crud->set_relation('id_registro','registro','{rut_alumno} Edición N°{id_edicion} Asignatura N°{id_asignatura}');	
-		$crud->display_as('id_registro','Registro');
-		$output=$crud->render();
-
-		$this->load->view('administrador/load_gc/head',$output);
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/load_gc/body',$output);
+		$this->load->view('apoderado/head');
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/body');
 	}
 
 	//Se ocupó grocery crud simple, solo para mostrar las tablas, después se verá si es necesario hacerlas a mano o dejarlas así :)
@@ -49,10 +34,10 @@ class PrincipalAdministrador extends CI_Controller {
 		$crud->set_relation('rut_apoderado','apoderado','rut_apoderado');	
 		$output=$crud->render();
 
-		$this->load->view('administrador/load_gc/head',$output);
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/load_gc/body',$output);
+		$this->load->view('apoderado/load_gc/head',$output);
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/load_gc/body',$output);
 	}
 
 	public function apoderado(){
@@ -62,10 +47,10 @@ class PrincipalAdministrador extends CI_Controller {
 		$crud->set_subject('Apoderados');
 		$output=$crud->render();
 
-		$this->load->view('administrador/load_gc/head',$output);
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/load_gc/body',$output);
+		$this->load->view('apoderado/load_gc/head',$output);
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/load_gc/body',$output);
 	}
 
 	public function profesor(){
@@ -75,10 +60,10 @@ class PrincipalAdministrador extends CI_Controller {
 		$crud->set_subject('Profesores');
 		$output=$crud->render();
 
-		$this->load->view('administrador/load_gc/head',$output);
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/load_gc/body',$output);
+		$this->load->view('apoderado/load_gc/head',$output);
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/load_gc/body',$output);
 	}
 	public function asignatura(){
 		$crud = new grocery_CRUD();
@@ -87,10 +72,10 @@ class PrincipalAdministrador extends CI_Controller {
 		$crud->set_subject('Asignaturas');
 		$output=$crud->render();
 
-		$this->load->view('administrador/load_gc/head',$output);
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/load_gc/body',$output);
+		$this->load->view('apoderado/load_gc/head',$output);
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/load_gc/body',$output);
 	}
 
 
@@ -106,10 +91,10 @@ class PrincipalAdministrador extends CI_Controller {
 		
 		$output=$crud->render();
 
-		$this->load->view('administrador/load_gc/head',$output);
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/load_gc/body',$output);
+		$this->load->view('apoderado/load_gc/head',$output);
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/load_gc/body',$output);
 	}
 
 	public function registro(){
@@ -117,22 +102,12 @@ class PrincipalAdministrador extends CI_Controller {
 		$crud->set_theme('bootstrap');
 		$crud->set_table('registro');
 		$crud->set_subject('Registros');
-
-
-		$crud->set_relation('id_edicion','edicion','{nombre_curso} {anio_curso}');
-		$crud->set_relation('rut_alumno','alumno','rut_alumno');
-		$crud->set_relation('rut_profesor','profesor','rut_profesor');
-		$crud->set_relation('id_asignatura','asignatura','nombre_asignatura');
-
-		$crud->display_as('x_mestre','Semestre o Trimestre');
-		$crud->display_as('id_edicion','Edicion');
-		$crud->display_as('id_asignatura','Asignatura');
 		$output=$crud->render();
 
-		$this->load->view('administrador/load_gc/head',$output);
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/load_gc/body',$output);
+		$this->load->view('apoderado/load_gc/head',$output);
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/load_gc/body',$output);
 	}
 
 	public function edicion(){
@@ -143,24 +118,24 @@ class PrincipalAdministrador extends CI_Controller {
 		$crud->set_relation('rut_profesor_jefe','profesor','rut_profesor');
 		$output=$crud->render();
 
-		$this->load->view('administrador/load_gc/head',$output);
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/load_gc/body',$output);
+		$this->load->view('apoderado/load_gc/head',$output);
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/load_gc/body',$output);
 	}
 	//Aquí termina el grocery crud simple, lo siguiente se hizo a mano
 
 	//Este es el primer paso, el formulario permite al usuario filtrar la búsqueda
 	//Se filtra por el curso, edición, asignatura, y semestre/trimestre.
 	public function formulario_notas(){
-		$resultado['edicion1']=$this->Administrador_Model->Consultar_Edicion();
-		$resultado['edicion2']=$this->Administrador_Model->Consultar_Edicion();
-		$resultado['asignatura']=$this->Administrador_Model->Consultar_Asignatura();
+		$resultado['edicion1']=$this->Apoderado_Model->Consultar_Edicion();
+		$resultado['edicion2']=$this->Apoderado_Model->Consultar_Edicion();
+		$resultado['asignatura']=$this->Apoderado_Model->Consultar_Asignatura();
 
-		$this->load->view('administrador/head');
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/notas/formulario',$resultado);
+		$this->load->view('apoderado/head');
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/notas/formulario',$resultado);
 	}
 
 	//Luego de envíar el formulario para el filtro, los resultados del envío se
@@ -172,11 +147,12 @@ class PrincipalAdministrador extends CI_Controller {
 		$resultado['edicion']=$this->input->post('edicion-post');
 		$resultado['asignatura']=$this->input->post('asignatura-post');
 		$resultado['xmestre']=$this->input->post('xmestre-post');
+		
 
 		//Como tenemos curso y edición por separado, necesitamos el id de la edición
 		//Por qué?, porque una edición se compone de "curso+anio_curso",
 		//y la edición es la que está en la tabla "registro".
-		$resultado['edicion_post']=$this->Administrador_Model->Consultar_Edicion_post($resultado);
+		$resultado['edicion_post']=$this->Apoderado_Model->Consultar_Edicion_post($resultado);
 
 		//capturamos el id de la edición obtenido anteriormente.Siempre es una tupla!
 		$id_edicion=null;
@@ -188,13 +164,13 @@ class PrincipalAdministrador extends CI_Controller {
 
 		//ahora con todos los datos(id_edicion,id_asignatura,x_mestre) se hace la consulta
 		//en la tabla Registro
-		$resultado['registro']=$this->Administrador_Model->Consultar_Registro($resultado);
+		$resultado['registro']=$this->Apoderado_Model->Consultar_Registro($resultado);
 
 
-		$this->load->view('administrador/head');
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/notas/body',$resultado);
+		$this->load->view('apoderado/head');
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/notas/body',$resultado);
 	}
 
 	public function actualizar_basedatos(){
@@ -207,7 +183,7 @@ class PrincipalAdministrador extends CI_Controller {
 				$aux=$this->input->post('nota-'.$i);
 				$arreglo['codigo_nota']=$i;
 				$arreglo['nota']=$aux;
-				$this->Administrador_Model->actualizar_notas($arreglo);
+				$this->Apoderado_Model->actualizar_notas($arreglo);
 			}
 		}
 		//Luego de actualizar, se redirecciona a la página principal
@@ -225,18 +201,18 @@ class PrincipalAdministrador extends CI_Controller {
 		$crud->set_relation('rut_profesor','profesor','rut_profesor');
 		$output=$crud->render();
 
-		$this->load->view('administrador/load_gc/head',$output);
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/load_gc/body',$output);
+		$this->load->view('apoderado/load_gc/head',$output);
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/load_gc/body',$output);
 	}
 
 	Public function calendario()
 	{
-		$this->load->view('administrador/calendario/head');
-		$this->load->view('administrador/header');
-		$this->load->view('administrador/aside');
-		$this->load->view('administrador/calendario/body');
+		$this->load->view('apoderado/calendario/head');
+		$this->load->view('apoderado/header');
+		$this->load->view('apoderado/aside');
+		$this->load->view('apoderado/calendario/body');
 
 	}
 

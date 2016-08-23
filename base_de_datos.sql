@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-08-2016 a las 06:28:42
+-- Tiempo de generación: 23-08-2016 a las 14:03:33
 -- Versión del servidor: 10.1.13-MariaDB
 -- Versión de PHP: 7.0.8
 
@@ -20,6 +20,61 @@ SET time_zone = "+00:00";
 -- Base de datos: `proyecto_info_dos`
 --
 
+DELIMITER $$
+--
+-- Funciones
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `validate_rut` (`RUT` VARCHAR(12)) RETURNS INT(11) BEGIN
+  DECLARE strlen INT;
+  DECLARE i INT;
+  DECLARE j INT;
+  DECLARE suma NUMERIC;
+  DECLARE temprut VARCHAR(12);
+  DECLARE verify_dv CHAR(2);
+  DECLARE DV CHAR(1);
+  IF NOT(RUT like '%-%') THEN
+    return 0;
+  end if;
+  
+  SET RUT = REPLACE(REPLACE(RUT, '.', ''),'-','');
+  SET DV = SUBSTR(RUT,-1,1);
+  SET RUT = SUBSTR(RUT,1,LENGTH(RUT)-1);
+  SET i = 1;
+    SET strlen = LENGTH(RUT);
+    SET j = 2;
+    SET suma = 0;
+  IF strlen = 8 OR strlen = 7 THEN
+    SET temprut = REVERSE(RUT);
+    moduloonce: LOOP
+        IF i <= LENGTH(temprut) THEN
+          SET suma = suma + (CONVERT(SUBSTRING(temprut, i, 1),UNSIGNED INTEGER) * j); 
+            SET i = i + 1;
+            IF j = 7 THEN
+            SET j = 2;
+          ELSE
+            SET j = j + 1;
+          END IF;
+            ITERATE moduloonce;
+        END IF;
+        LEAVE moduloonce;
+      END LOOP moduloonce;
+      SET verify_dv = 11 - (suma % 11);
+      IF verify_dv = 11 THEN
+        SET verify_dv = 0;
+      ELSEIF verify_dv = 10 THEN 
+        SET verify_dv = 'K';
+      END IF;
+      IF DV = verify_dv THEN
+        RETURN 1;
+      ELSE 
+        RETURN 0;
+      END IF;
+  END IF;
+  RETURN 0;
+END$$
+
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -27,10 +82,31 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `administrador` (
-  `rut_administrador` int(11) NOT NULL,
-  `contrasena` varchar(250) DEFAULT NULL,
-  `nombre_administrador` varchar(250) DEFAULT NULL
+  `rut_administrador` varchar(12) NOT NULL,
+  `contrasena` varchar(250) NOT NULL,
+  `nombre_administrador` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `administrador`
+--
+
+INSERT INTO `administrador` (`rut_administrador`, `contrasena`, `nombre_administrador`) VALUES
+('7832146-6', '123', 'Camila');
+
+--
+-- Disparadores `administrador`
+--
+DELIMITER $$
+CREATE TRIGGER `validar_rut_administrador` BEFORE INSERT ON `administrador` FOR EACH ROW BEGIN
+  declare variable varchar(11);
+  IF validate_rut(new.rut_administrador)=0 THEN
+      SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'RUT ISSUE';
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -39,20 +115,33 @@ CREATE TABLE `administrador` (
 --
 
 CREATE TABLE `alumno` (
-  `rut_alumno` int(11) NOT NULL,
-  `contrasena` varchar(250) DEFAULT NULL,
-  `nombre_alumno` varchar(250) DEFAULT NULL,
-  `tipo` varchar(250) DEFAULT NULL,
-  `rut_apoderado` int(11) DEFAULT NULL
+  `rut_alumno` varchar(12) NOT NULL,
+  `contrasena` varchar(250) NOT NULL,
+  `nombre_alumno` varchar(250) NOT NULL,
+  `rut_apoderado` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `alumno`
 --
 
-INSERT INTO `alumno` (`rut_alumno`, `contrasena`, `nombre_alumno`, `tipo`, `rut_apoderado`) VALUES
-(11, '123', 'Juan', NULL, NULL),
-(12, '123', 'Kari', NULL, NULL);
+INSERT INTO `alumno` (`rut_alumno`, `contrasena`, `nombre_alumno`, `rut_apoderado`) VALUES
+('11111111-1', '123', 'Eduardo', ''),
+('18648731-1', '123', 'Karina', '');
+
+--
+-- Disparadores `alumno`
+--
+DELIMITER $$
+CREATE TRIGGER `validar_rut_alumno` BEFORE INSERT ON `alumno` FOR EACH ROW BEGIN
+  declare variable varchar(11);
+  IF validate_rut(new.rut_alumno)=0 THEN
+      SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'RUT ISSUE';
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -62,7 +151,7 @@ INSERT INTO `alumno` (`rut_alumno`, `contrasena`, `nombre_alumno`, `tipo`, `rut_
 
 CREATE TABLE `anotaciones` (
   `codigo_anotacion` int(11) NOT NULL,
-  `anotacion` varchar(250) DEFAULT NULL,
+  `anotacion` varchar(250) NOT NULL,
   `rut_alumno` varchar(250) NOT NULL,
   `rut_profesor` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -75,17 +164,17 @@ CREATE TABLE `anotaciones` (
 
 CREATE TABLE `ape` (
   `id` int(11) NOT NULL,
-  `asignatura` int(11) DEFAULT NULL,
-  `profesor` int(11) DEFAULT NULL,
-  `edicion` int(11) DEFAULT NULL
+  `edicion` int(11) NOT NULL,
+  `asignatura` int(11) NOT NULL,
+  `profesor` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `ape`
 --
 
-INSERT INTO `ape` (`id`, `asignatura`, `profesor`, `edicion`) VALUES
-(0, 1, 111, 1);
+INSERT INTO `ape` (`id`, `edicion`, `asignatura`, `profesor`) VALUES
+(1, 1, 2, '18893542-7');
 
 -- --------------------------------------------------------
 
@@ -94,11 +183,24 @@ INSERT INTO `ape` (`id`, `asignatura`, `profesor`, `edicion`) VALUES
 --
 
 CREATE TABLE `apoderado` (
-  `rut_apoderado` int(11) NOT NULL,
-  `contrasena` varchar(250) DEFAULT NULL,
-  `nombre_apoderado` varchar(250) DEFAULT NULL,
-  `tipo` varchar(250) DEFAULT NULL
+  `rut_apoderado` varchar(12) NOT NULL,
+  `contrasena` varchar(250) NOT NULL,
+  `nombre_apoderado` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Disparadores `apoderado`
+--
+DELIMITER $$
+CREATE TRIGGER `validar_rut_apoderado` BEFORE INSERT ON `apoderado` FOR EACH ROW BEGIN
+  declare variable varchar(11);
+  IF validate_rut(new.rut_apoderado)=0 THEN
+      SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'RUT ISSUE';
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -108,7 +210,7 @@ CREATE TABLE `apoderado` (
 
 CREATE TABLE `asignatura` (
   `id_asignatura` int(11) NOT NULL,
-  `nombre_asignatura` varchar(250) DEFAULT NULL
+  `nombre_asignatura` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -116,7 +218,7 @@ CREATE TABLE `asignatura` (
 --
 
 INSERT INTO `asignatura` (`id_asignatura`, `nombre_asignatura`) VALUES
-(1, 'Matemáticas'),
+(1, 'Matemática'),
 (2, 'Lenguaje');
 
 -- --------------------------------------------------------
@@ -127,9 +229,9 @@ INSERT INTO `asignatura` (`id_asignatura`, `nombre_asignatura`) VALUES
 
 CREATE TABLE `edicion` (
   `id_edicion` int(11) NOT NULL,
-  `nombre_curso` varchar(250) DEFAULT NULL,
-  `anio_curso` int(11) DEFAULT NULL,
-  `rut_profesor_jefe` int(11) DEFAULT NULL
+  `nombre_curso` varchar(250) NOT NULL,
+  `anio_curso` int(11) NOT NULL,
+  `rut_profesor_jefe` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -137,8 +239,7 @@ CREATE TABLE `edicion` (
 --
 
 INSERT INTO `edicion` (`id_edicion`, `nombre_curso`, `anio_curso`, `rut_profesor_jefe`) VALUES
-(1, '2°', 2015, NULL),
-(2, '3°', 2016, NULL);
+(1, '3°', 2015, '18893542-7');
 
 -- --------------------------------------------------------
 
@@ -154,14 +255,6 @@ CREATE TABLE `events` (
   `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Volcado de datos para la tabla `events`
---
-
-INSERT INTO `events` (`id`, `title`, `description`, `color`, `date`) VALUES
-(15, 'hola', '123', '#3a87ad', '2016-08-01 23:23:00'),
-(16, 'holamundo', '123', '#3a87ad', '2016-08-02 23:34:00');
-
 -- --------------------------------------------------------
 
 --
@@ -170,8 +263,8 @@ INSERT INTO `events` (`id`, `title`, `description`, `color`, `date`) VALUES
 
 CREATE TABLE `notas` (
   `codigo_nota` int(11) NOT NULL,
-  `id_registro` int(11) DEFAULT NULL,
-  `nota` float DEFAULT NULL
+  `id_registro` int(11) NOT NULL,
+  `nota` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -179,8 +272,8 @@ CREATE TABLE `notas` (
 --
 
 INSERT INTO `notas` (`codigo_nota`, `id_registro`, `nota`) VALUES
-(3, 2, 2.9),
-(4, 2, 5.2);
+(2, 1, 6.4),
+(3, 1, 7);
 
 -- --------------------------------------------------------
 
@@ -189,10 +282,10 @@ INSERT INTO `notas` (`codigo_nota`, `id_registro`, `nota`) VALUES
 --
 
 CREATE TABLE `profesor` (
-  `rut_profesor` int(11) NOT NULL,
-  `contrasena` varchar(250) DEFAULT NULL,
-  `nombre_profesor` varchar(250) DEFAULT NULL,
-  `tipo` varchar(250) DEFAULT NULL
+  `rut_profesor` varchar(12) NOT NULL,
+  `contrasena` varchar(250) NOT NULL,
+  `nombre_profesor` varchar(250) NOT NULL,
+  `tipo` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -200,7 +293,21 @@ CREATE TABLE `profesor` (
 --
 
 INSERT INTO `profesor` (`rut_profesor`, `contrasena`, `nombre_profesor`, `tipo`) VALUES
-(111, '123', 'Cami', NULL);
+('18893542-7', '123', 'Juan', '');
+
+--
+-- Disparadores `profesor`
+--
+DELIMITER $$
+CREATE TRIGGER `validar_rut_profesor` BEFORE INSERT ON `profesor` FOR EACH ROW BEGIN
+  declare variable varchar(11);
+  IF validate_rut(new.rut_profesor)=0 THEN
+      SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'RUT ISSUE';
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -210,11 +317,11 @@ INSERT INTO `profesor` (`rut_profesor`, `contrasena`, `nombre_profesor`, `tipo`)
 
 CREATE TABLE `registro` (
   `id_registro` int(11) NOT NULL,
-  `id_edicion` int(11) DEFAULT NULL,
-  `rut_alumno` int(11) DEFAULT NULL,
-  `rut_profesor` int(11) DEFAULT NULL,
-  `id_asignatura` int(11) DEFAULT NULL,
-  `x_mestre` int(11) DEFAULT NULL
+  `id_edicion` int(11) NOT NULL,
+  `rut_alumno` varchar(12) NOT NULL,
+  `rut_profesor` varchar(12) NOT NULL,
+  `id_asignatura` int(11) NOT NULL,
+  `x_mestre` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -222,8 +329,7 @@ CREATE TABLE `registro` (
 --
 
 INSERT INTO `registro` (`id_registro`, `id_edicion`, `rut_alumno`, `rut_profesor`, `id_asignatura`, `x_mestre`) VALUES
-(1, 1, 11, 111, 1, 1),
-(2, 1, 12, 111, 1, 1);
+(1, 1, '11111111-1', '18893542-7', 1, 1);
 
 --
 -- Índices para tablas volcadas
@@ -239,8 +345,7 @@ ALTER TABLE `administrador`
 -- Indices de la tabla `alumno`
 --
 ALTER TABLE `alumno`
-  ADD PRIMARY KEY (`rut_alumno`),
-  ADD KEY `fk_alumno_apoderado` (`rut_apoderado`);
+  ADD PRIMARY KEY (`rut_alumno`);
 
 --
 -- Indices de la tabla `anotaciones`
@@ -252,10 +357,7 @@ ALTER TABLE `anotaciones`
 -- Indices de la tabla `ape`
 --
 ALTER TABLE `ape`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_ape_asignatura` (`asignatura`),
-  ADD KEY `fk_ape_profesor` (`profesor`),
-  ADD KEY `fk_ape_edicion` (`edicion`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `apoderado`
@@ -273,9 +375,7 @@ ALTER TABLE `asignatura`
 -- Indices de la tabla `edicion`
 --
 ALTER TABLE `edicion`
-  ADD PRIMARY KEY (`id_edicion`),
-  ADD KEY `fk_edicion_curso` (`nombre_curso`),
-  ADD KEY `fk_edicion_profesor` (`rut_profesor_jefe`);
+  ADD PRIMARY KEY (`id_edicion`);
 
 --
 -- Indices de la tabla `events`
@@ -287,8 +387,7 @@ ALTER TABLE `events`
 -- Indices de la tabla `notas`
 --
 ALTER TABLE `notas`
-  ADD PRIMARY KEY (`codigo_nota`),
-  ADD KEY `fk_notas_registro` (`id_registro`);
+  ADD PRIMARY KEY (`codigo_nota`);
 
 --
 -- Indices de la tabla `profesor`
@@ -300,60 +399,47 @@ ALTER TABLE `profesor`
 -- Indices de la tabla `registro`
 --
 ALTER TABLE `registro`
-  ADD PRIMARY KEY (`id_registro`),
-  ADD KEY `fk_registro_edicion` (`id_edicion`),
-  ADD KEY `fk_registro_alumno` (`rut_alumno`),
-  ADD KEY `fk_registro_profesor` (`rut_profesor`),
-  ADD KEY `fk_registro_asignatura` (`id_asignatura`);
+  ADD PRIMARY KEY (`id_registro`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
+-- AUTO_INCREMENT de la tabla `anotaciones`
+--
+ALTER TABLE `anotaciones`
+  MODIFY `codigo_anotacion` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `ape`
+--
+ALTER TABLE `ape`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT de la tabla `asignatura`
+--
+ALTER TABLE `asignatura`
+  MODIFY `id_asignatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT de la tabla `edicion`
+--
+ALTER TABLE `edicion`
+  MODIFY `id_edicion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT de la tabla `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `alumno`
---
-ALTER TABLE `alumno`
-  ADD CONSTRAINT `fk_alumno_apoderado` FOREIGN KEY (`rut_apoderado`) REFERENCES `apoderado` (`rut_apoderado`);
-
---
--- Filtros para la tabla `ape`
---
-ALTER TABLE `ape`
-  ADD CONSTRAINT `fk_ape_asignatura` FOREIGN KEY (`asignatura`) REFERENCES `asignatura` (`id_asignatura`),
-  ADD CONSTRAINT `fk_ape_edicion` FOREIGN KEY (`edicion`) REFERENCES `edicion` (`id_edicion`),
-  ADD CONSTRAINT `fk_ape_profesor` FOREIGN KEY (`profesor`) REFERENCES `profesor` (`rut_profesor`);
-
---
--- Filtros para la tabla `edicion`
---
-ALTER TABLE `edicion`
-  ADD CONSTRAINT `fk_edicion_profesor` FOREIGN KEY (`rut_profesor_jefe`) REFERENCES `profesor` (`rut_profesor`);
-
---
--- Filtros para la tabla `notas`
+-- AUTO_INCREMENT de la tabla `notas`
 --
 ALTER TABLE `notas`
-  ADD CONSTRAINT `fk_notas_registro` FOREIGN KEY (`id_registro`) REFERENCES `registro` (`id_registro`);
-
+  MODIFY `codigo_nota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
--- Filtros para la tabla `registro`
+-- AUTO_INCREMENT de la tabla `registro`
 --
 ALTER TABLE `registro`
-  ADD CONSTRAINT `fk_registro_alumno` FOREIGN KEY (`rut_alumno`) REFERENCES `alumno` (`rut_alumno`),
-  ADD CONSTRAINT `fk_registro_asignatura` FOREIGN KEY (`id_asignatura`) REFERENCES `asignatura` (`id_asignatura`),
-  ADD CONSTRAINT `fk_registro_edicion` FOREIGN KEY (`id_edicion`) REFERENCES `edicion` (`id_edicion`),
-  ADD CONSTRAINT `fk_registro_profesor` FOREIGN KEY (`rut_profesor`) REFERENCES `profesor` (`rut_profesor`);
-
+  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

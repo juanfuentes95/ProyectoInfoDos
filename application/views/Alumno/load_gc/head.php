@@ -1,7 +1,7 @@
 <?php   
     if(isset($_SESSION['rol'])){
-        if ($_SESSION['rol']=="ADMINISTRADOR") {
-            $admin="ADMINISTRADOR";
+        if ($_SESSION['rol']=="ALUMNO") {
+            $admin="ALUMNO";
         }else{
             $admin="NO ADMIN";
         }        
@@ -11,10 +11,9 @@
     if($admin=="NO SET")
         header("Location: ".base_url());
     if($admin=="NO ADMIN")
-        header("Location: ".base_url()."index.php/principalAdministrador/error");
-    if($admin=="ADMINISTRADOR")
+        header("Location: ".base_url()."index.php/principalALUMNO/error");
+    if($admin=="ALUMNO")
 ?>
-
 
 <!DOCTYPE html>
 <html>

@@ -23,11 +23,15 @@
 	        </div>
 
 	        <div class="panel-body">
-	          	<a class="color-panel" style="color:black;" href="<?php echo base_url()?>index.php/principalAdministrador/edicion">Edicion</a>
+	          	<a class="color-panel" style="color:black;" href="<?php echo base_url()?>index.php/principalAdministrador/edicion">Cursos</a>
 	        </div>
 
 	        <div class="panel-body">
 	          	<a class="color-panel" style="color:black;" href="<?php echo base_url()?>index.php/principalAdministrador/formulario_notas">Notas</a>
+	        </div>
+
+	         <div class="panel-body">
+	          	<a class="color-panel" style="color:black;" href="<?php echo base_url()?>index.php/principalAdministrador/ingresar_notas">Ingresar Notas</a>
 	        </div>
 
 	        <div class="panel-body">
@@ -37,6 +41,7 @@
 	        <div class="panel-body">
 	          	<a class="color-panel" style="color:black;" href="<?php echo base_url()?>index.php/principalAdministrador/calendario">Reuniones</a>
 	        </div>
+
 	  	</div>
 	</div>
 </aside>
